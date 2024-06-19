@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 	"sublinks/sublinks-federation/internal/activitypub"
 
 	"golang.org/x/text/cases"
@@ -28,9 +29,10 @@ func (server *Server) getActivityHandler(w http.ResponseWriter, r *http.Request)
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
+		hostname := os.Getenv("HOSTNAME")
 		content, _ = json.MarshalIndent(
 			activitypub.NewActivity(
-				r.RequestURI,
+				fmt.Sprintf("https://%s/activities/%s/%s", hostname, vars["action"], vars["id"]),
 				cases.Title(language.English).String(vars["action"]),
 				obj.AttributedTo,
 				obj.To,
