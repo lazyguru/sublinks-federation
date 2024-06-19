@@ -17,12 +17,17 @@ type Database interface {
 	Ping() bool
 	RunMigrations()
 	Find(interface{}, ...interface{}) error
+	Preload(model string) *gorm.DB
 	Save(interface{}) error
 }
 
 func (db *FederationDB) Find(data interface{}, conds ...interface{}) error {
 	db.tx = db.DB.Find(data, conds)
 	return db.tx.Error
+}
+
+func (db *FederationDB) Preload(model string) *gorm.DB {
+	return db.DB.Preload(model)
 }
 
 func (db *FederationDB) Ping() bool {

@@ -13,20 +13,29 @@ func NewUserService(db db.Database) *UserService {
 	return &UserService{db}
 }
 
-func (a UserService) GetById(id string) *model.Actor {
-	actor := model.Actor{ActorType: "Person"}
-	return a.Load(&actor, id)
+func (a UserService) GetById(id string) *model.Person {
+	person := model.Person{}
+	return a.Load(&person, id)
 }
 
-func (a UserService) Load(actor *model.Actor, id string) *model.Actor {
-	err := a.db.Find(actor, id)
+func (a UserService) GetByUsername(username string) *model.Person {
+	person := model.Person{}
+	err := a.db.Preload("Posts").Find(&person, model.Person{Username: username}).Error
 	if err != nil {
-		return actor
+		return nil
 	}
-	return nil
+	return &person
 }
 
-func (a UserService) Save(actor *model.Actor) bool {
-	err := a.db.Save(actor)
+func (a UserService) Load(person *model.Person, id string) *model.Person {
+	err := a.db.Preload("Posts").Find(person, id).Error
+	if err != nil {
+		return nil
+	}
+	return person
+}
+
+func (a UserService) Save(person *model.Person) bool {
+	err := a.db.Save(person)
 	return err == nil
 }
