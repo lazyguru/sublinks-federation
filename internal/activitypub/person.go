@@ -49,7 +49,7 @@ func NewPerson(
 	return person
 }
 
-func ConvertActorToPerson(u *model.Actor) Person {
+func ConvertActorToPerson(u *model.Person) Person {
 	return NewPerson(
 		u.Id,
 		u.Username,

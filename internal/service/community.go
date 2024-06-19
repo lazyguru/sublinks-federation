@@ -13,17 +13,29 @@ func NewCommunityService(db db.Database) *CommunityService {
 	return &CommunityService{db}
 }
 
-func (a CommunityService) GetById(id string) *model.Actor {
-	actor := &model.Actor{ActorType: "Group"}
-	a.load(actor, id)
-	return actor
+func (a CommunityService) GetById(id string) *model.Group {
+	group := model.Group{}
+	return a.load(&group, id)
 }
 
-func (a CommunityService) load(actor *model.Actor, id string) {
-	_ = a.db.Find(actor, id)
+func (a CommunityService) GetByUsername(username string) *model.Group {
+	person := model.Group{}
+	err := a.db.Preload("Posts").Find(&person, model.Group{Username: username}).Error
+	if err != nil {
+		return nil
+	}
+	return &person
 }
 
-func (a CommunityService) Save(actor *model.Actor) bool {
-	err := a.db.Save(actor)
+func (a CommunityService) load(group *model.Group, id string) *model.Group {
+	err := a.db.Preload("Posts").Find(group, id).Error
+	if err != nil {
+		return nil
+	}
+	return group
+}
+
+func (a CommunityService) Save(group *model.Group) bool {
+	err := a.db.Save(group)
 	return err == nil
 }

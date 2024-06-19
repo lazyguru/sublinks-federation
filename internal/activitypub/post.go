@@ -56,8 +56,8 @@ func NewPage(postUrl string, fromUser string, communityUrl string, postTitle str
 func ConvertPostToPage(p *model.Post) *Page {
 	return NewPage(
 		p.Id,
-		p.Author,
-		p.Community,
+		p.AuthorId,
+		p.CommunityId,
 		p.Title,
 		p.Content,
 		p.Nsfw,

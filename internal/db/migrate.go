@@ -10,7 +10,7 @@ import (
 func (d *FederationDB) RunMigrations() {
 	logger := log.NewLogger("db migrations")
 	logger.Debug("Running migrations...")
-	err := d.DB.AutoMigrate(&model.Actor{}, &model.Post{})
+	err := d.DB.AutoMigrate(&model.Person{}, &model.Group{}, &model.Post{})
 	if err != nil {
 		logger.Fatal("Failed to run migrations", err)
 	}

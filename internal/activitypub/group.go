@@ -48,7 +48,7 @@ func NewGroup(
 	return group
 }
 
-func ConvertActorToGroup(a *model.Actor) Group {
+func ConvertActorToGroup(a *model.Group) Group {
 	return NewGroup(
 		a.Id,
 		a.Username,

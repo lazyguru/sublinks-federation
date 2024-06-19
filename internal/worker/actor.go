@@ -29,14 +29,34 @@ func (w *ActorWorker) Process(msg []byte) error {
 		w.Logger.Error("Error unmarshalling actor", err)
 		return err
 	}
-	if actor.ActorType == "Group" && !w.communityService.Save(&actor) {
-		w.Logger.Error("Error saving actor (community)", nil)
-		return errors.New("Error saving actor (community)")
-	}
-
-	if actor.ActorType == "Person" && !w.userService.Save(&actor) {
-		w.Logger.Error("Error saving actor (user)", nil)
-		return errors.New("Error saving actor (user)")
+	switch actor.ActorType {
+	case "Person":
+		person := model.Person{
+			Id:           actor.Id,
+			Username:     actor.Username,
+			Name:         actor.Name,
+			Bio:          actor.Bio,
+			MatrixUserId: actor.MatrixUserId,
+			PublicKey:    actor.PublicKey,
+			PrivateKey:   actor.PrivateKey,
+		}
+		if !w.userService.Save(&person) {
+			w.Logger.Error("Error saving person", nil)
+			return errors.New("Error saving person")
+		}
+	case "Group":
+		group := model.Group{
+			Id:         actor.Id,
+			Username:   actor.Username,
+			Name:       actor.Name,
+			Bio:        actor.Bio,
+			PublicKey:  actor.PublicKey,
+			PrivateKey: actor.PrivateKey,
+		}
+		if !w.communityService.Save(&group) {
+			w.Logger.Error("Error saving community", nil)
+			return errors.New("Error saving ommunity")
+		}
 	}
 	return nil
 }
