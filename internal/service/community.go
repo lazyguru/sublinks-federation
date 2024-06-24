@@ -14,21 +14,17 @@ func NewCommunityService(db db.Database) *CommunityService {
 }
 
 func (a CommunityService) GetById(id string) *model.Group {
-	group := model.Group{}
-	return a.load(&group, id)
-}
-
-func (a CommunityService) GetByUsername(username string) *model.Group {
-	person := model.Group{}
-	err := a.db.Preload("Posts").Find(&person, model.Group{Username: username}).Error
+	group := &model.Group{}
+	err := a.db.Preload("Posts").Find(group, model.Group{Id: id}).Error
 	if err != nil {
 		return nil
 	}
-	return &person
+	return group
 }
 
-func (a CommunityService) load(group *model.Group, id string) *model.Group {
-	err := a.db.Preload("Posts").Find(group, id).Error
+func (a CommunityService) GetByUsername(username string) *model.Group {
+	group := &model.Group{}
+	err := a.db.Preload("Posts").Find(group, model.Group{Username: username}).Error
 	if err != nil {
 		return nil
 	}

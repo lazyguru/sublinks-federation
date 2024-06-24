@@ -1,12 +1,19 @@
 package model
 
-import "time"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type Comment struct {
+	gorm.Model
 	Id        string    `json:"id" gorm:"primary_key"`
 	UrlStub   string    `json:"url_stub"`
-	Post      string    `json:"post_id"`
-	Author    string    `json:"author_id"`
+	Post      Post      `json:"post_id"`
+	PostId    string    ``
+	Author    Person    `json:"author_id"`
+	AuthorId  string    ``
 	Nsfw      bool      `json:"nsfw"`
 	Published time.Time `json:"published"`
 	Content   string    `json:"content"`
