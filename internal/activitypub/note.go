@@ -56,5 +56,5 @@ func NewNote(commentUrl string, fromUser string, postUrl string, commentBody str
 }
 
 func ConvertCommentToNote(c *model.Comment) *Note {
-	return NewNote(c.UrlStub, c.Author, c.Post, c.Content, c.Published)
+	return NewNote(c.UrlStub, c.Author.Id, c.Post.Id, c.Content, c.Published)
 }

@@ -14,21 +14,17 @@ func NewUserService(db db.Database) *UserService {
 }
 
 func (a UserService) GetById(id string) *model.Person {
-	person := model.Person{}
-	return a.Load(&person, id)
-}
-
-func (a UserService) GetByUsername(username string) *model.Person {
-	person := model.Person{}
-	err := a.db.Preload("Posts").Find(&person, model.Person{Username: username}).Error
+	person := &model.Person{}
+	err := a.db.Preload("Posts").Find(person, model.Person{Id: id}).Error
 	if err != nil {
 		return nil
 	}
-	return &person
+	return person
 }
 
-func (a UserService) Load(person *model.Person, id string) *model.Person {
-	err := a.db.Preload("Posts").Find(person, id).Error
+func (a UserService) GetByUsername(username string) *model.Person {
+	person := &model.Person{}
+	err := a.db.Preload("Posts").Find(person, model.Person{Username: username}).Error
 	if err != nil {
 		return nil
 	}

@@ -13,13 +13,13 @@ func NewCommentService(db db.Database) *CommentService {
 	return &CommentService{db}
 }
 
-func (p CommentService) GetById(id string) interface{} {
+func (p CommentService) GetById(id string) *model.Comment {
 	comment := &model.Comment{}
-	err := p.db.Find(comment, id)
+	err := p.db.Preload("Post").Find(comment, model.Comment{Id: id}).Error
 	if err != nil {
-		return comment
+		return nil
 	}
-	return nil
+	return comment
 }
 
 func (p CommentService) Save(comment interface{}) bool {
